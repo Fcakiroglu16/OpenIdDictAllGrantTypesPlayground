@@ -33,10 +33,11 @@ public class AuthController : ControllerBase
         var request = HttpContext.GetOpenIddictServerRequest() ??
                       throw new ArgumentNullException("HttpContext.GetOpenIddictServerRequest()");
 
-        if (!request.IsPasswordGrantType())
-            throw new NotImplementedException("The specified grant type is not implemented.");
+        if (request.IsPasswordGrantType())
 
-        var user = await _userManager.FindByEmailAsync(request.Username);
+        {
+            
+              var user = await _userManager.FindByEmailAsync(request.Username);
         if (user == null)
         {
             var properties = new AuthenticationProperties(new Dictionary<string, string>
@@ -76,9 +77,9 @@ public class AuthController : ControllerBase
 
         // Set the list of scopes granted to the client application.
         identity.SetScopes(OpenIddictConstants.Scopes.OpenId, OpenIddictConstants.Scopes.Email,
-            OpenIddictConstants.Scopes.Profile, OpenIddictConstants.Scopes.Roles, "microservice1.read",
+            OpenIddictConstants.Scopes.Profile, OpenIddictConstants.Scopes.Roles, OpenIddictConstants.Scopes.OfflineAccess, "microservice1.read",
             "microservice1.write");
-
+       
         identity.SetResources("resource-microservice1");
 
         identity.SetDestinations(claim =>
@@ -100,6 +101,46 @@ public class AuthController : ControllerBase
         });
 
         return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+        
+        else if (request.IsRefreshTokenGrantType())
+        {
+            // Retrieve the claims principal stored in the device coauthorization code/de/refresh token.
+            var principal = (await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)).Principal;
+
+            // Retrieve the user profile corresponding to the refresh token.
+            var user = await _userManager.FindByIdAsync(principal.GetClaim(OpenIddictConstants.Claims.Subject));
+            if (user == null)
+            {
+                var properties = new AuthenticationProperties(new Dictionary<string, string>
+                {
+                    [OpenIddictServerAspNetCoreConstants.Properties.Error] = OpenIddictConstants.Errors.InvalidGrant,
+                    [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The refresh token is no longer valid."
+                });
+
+                return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            }
+
+            // Ensure the user is still allowed to sign in.
+            if (!await _signInManager.CanSignInAsync(user))
+            {
+                var properties = new AuthenticationProperties(new Dictionary<string, string>
+                {
+                    [OpenIddictServerAspNetCoreConstants.Properties.Error] = OpenIddictConstants.Errors.InvalidGrant,
+                    [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is no longer allowed to sign in."
+                });
+
+                return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            }
+
+            principal.SetDestinations(_=>  new[]
+                { OpenIddictConstants.Destinations.AccessToken, OpenIddictConstants.Destinations.IdentityToken });
+
+            return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+
+        throw new NotImplementedException("The specified grant type is not implemented.");
+      
     }
 
     [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]

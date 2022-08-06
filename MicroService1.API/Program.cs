@@ -1,10 +1,19 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
+// Add services to the container.
+// builder.Services.Configure<IdentityOptions>(options =>
+// {
+//     options.ClaimsIdentity.UserNameClaimType = JwtRegisteredClaimNames.Name;
+//     options.ClaimsIdentity.UserIdClaimType = JwtRegisteredClaimNames.Sub;
+//     options.ClaimsIdentity.RoleClaimType = "role";
+//     // configure more options if necessary...
+// });
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

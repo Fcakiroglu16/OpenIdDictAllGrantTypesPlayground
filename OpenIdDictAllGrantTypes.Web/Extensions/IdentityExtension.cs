@@ -15,14 +15,16 @@ public static class IdentityExtension
             // Register the OpenIddict server components.
             .AddServer(options =>
             {
-             
+                options.UseReferenceRefreshTokens();
                 options.AllowPasswordFlow();
+                options.AllowRefreshTokenFlow();
                 options.AcceptAnonymousClients();
                 options.SetTokenEndpointUris("/connect/token");
                 options.SetUserinfoEndpointUris("/connect/userinfo");
-                options.AddEphemeralEncryptionKey();
-                options.AddEphemeralSigningKey();
+                options.AddDevelopmentEncryptionCertificate();
+                options.AddDevelopmentSigningCertificate();
                 options.DisableAccessTokenEncryption();
+                
                 // options.RegisterScopes("microservice1.read",
                 //     "microservice1.write"); // Registers the specified scopes as supported scopes
                 options

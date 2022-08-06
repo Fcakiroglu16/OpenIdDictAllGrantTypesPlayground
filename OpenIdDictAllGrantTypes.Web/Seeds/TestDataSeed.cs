@@ -8,16 +8,17 @@ public class TestDataSeed
 {
     public static async Task SeedOpenIdDicit(IOpenIddictApplicationManager openIddictApplicationManager)
     {
-        if (await openIddictApplicationManager.FindByClientIdAsync("client1") is null)
+        if (await openIddictApplicationManager.FindByClientIdAsync("client2") is null)
             await openIddictApplicationManager.CreateAsync(new OpenIddictApplicationDescriptor
             {
-                ClientId = "client1",
+                ClientId = "client2",
                 ClientSecret = "secret",
-                DisplayName = "client 1",
+                DisplayName = "client 2",
                 Permissions =
                 {
                     OpenIddictConstants.Permissions.Endpoints.Token,
-                    OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
+                    OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
+                    OpenIddictConstants.Permissions.GrantTypes.Password,
                     OpenIddictConstants.Permissions.Prefixes.Scope + "microservice1.read",
                     OpenIddictConstants.Permissions.Prefixes.Scope + "microservice1.write"
                 }
