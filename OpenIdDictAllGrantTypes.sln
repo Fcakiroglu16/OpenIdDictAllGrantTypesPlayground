@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenIdDictAllGrantTypes.Web", "OpenIdDictAllGrantTypes.Web\OpenIdDictAllGrantTypes.Web.csproj", "{A789BA8B-6F21-4E5B-805F-452E78BD7532}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroService1.API", "MicroService1.API\MicroService1.API.csproj", "{280A4127-6D43-4471-A9E5-55C06A095C53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenTestConsoleApp", "TokenTestConsoleApp\TokenTestConsoleApp.csproj", "{F1BAAB33-6D62-4770-AB7F-6E56C86C09D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A789BA8B-6F21-4E5B-805F-452E78BD7532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A789BA8B-6F21-4E5B-805F-452E78BD7532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A789BA8B-6F21-4E5B-805F-452E78BD7532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A789BA8B-6F21-4E5B-805F-452E78BD7532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{280A4127-6D43-4471-A9E5-55C06A095C53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{280A4127-6D43-4471-A9E5-55C06A095C53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{280A4127-6D43-4471-A9E5-55C06A095C53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{280A4127-6D43-4471-A9E5-55C06A095C53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1BAAB33-6D62-4770-AB7F-6E56C86C09D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1BAAB33-6D62-4770-AB7F-6E56C86C09D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1BAAB33-6D62-4770-AB7F-6E56C86C09D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1BAAB33-6D62-4770-AB7F-6E56C86C09D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
