@@ -21,8 +21,7 @@ public static class IdentityExtension
                 options.SetUserinfoEndpointUris("/connect/userinfo");
                 options.AddDevelopmentEncryptionCertificate();
                 options.AddDevelopmentSigningCertificate();
-                   options.DisableAccessTokenEncryption();
-                
+                options.DisableAccessTokenEncryption();
 
                 // options.RegisterScopes("microservice1.read",
                 //     "microservice1.write"); // Registers the specified scopes as supported scopes
@@ -59,8 +58,5 @@ public static class IdentityExtension
                 opts.SlidingExpiration = true;
                 opts.ExpireTimeSpan = TimeSpan.FromDays(60);
             });
-        
-        
-        
     }
 }

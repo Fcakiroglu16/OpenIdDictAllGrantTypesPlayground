@@ -28,7 +28,7 @@ using (var scope = app.Services.CreateScope())
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
     var openIddictApplicationManager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
-    await TestDataSeed.SeedIdentity(userManager,roleManager);
+    await TestDataSeed.SeedIdentity(userManager, roleManager);
     await TestDataSeed.SeedOpenIdDicit(openIddictApplicationManager);
 }
 

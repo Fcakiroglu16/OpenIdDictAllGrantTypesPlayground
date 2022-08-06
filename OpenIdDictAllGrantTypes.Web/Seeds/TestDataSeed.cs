@@ -24,16 +24,15 @@ public class TestDataSeed
             });
     }
 
-    public static async Task SeedIdentity(UserManager<AppUser> userManager,RoleManager<AppRole> roleManager)
+    public static async Task SeedIdentity(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
     {
         if (!userManager.Users.Any())
         {
             var newUser = new AppUser { UserName = "admin", Email = "admin@outlook.com" };
 
-           await  roleManager.CreateAsync(new AppRole(){ Name = "Manager"});
-           await roleManager.CreateAsync(new AppRole() { Name = "Editor" });
-           
-               
+            await roleManager.CreateAsync(new AppRole { Name = "Manager" });
+            await roleManager.CreateAsync(new AppRole { Name = "Editor" });
+
             await userManager.CreateAsync(newUser, "Password12*");
             await userManager.AddToRoleAsync(newUser, "Manager");
             await userManager.AddToRoleAsync(newUser, "Editor");

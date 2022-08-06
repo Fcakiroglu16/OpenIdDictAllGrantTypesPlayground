@@ -17,8 +17,8 @@ namespace OpenIdDictAllGrantTypes.Web.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IOpenIddictScopeManager _scopeManager;
-    private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
+    private readonly UserManager<AppUser> _userManager;
 
     public AuthController(IOpenIddictScopeManager scopeManager, UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager)
@@ -50,7 +50,7 @@ public class AuthController : ControllerBase
         }
 
         // Validate the username/password parameters and ensure the account is not locked out.
-        var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
+        var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, true);
 
         if (!result.Succeeded)
         {
@@ -65,27 +65,22 @@ public class AuthController : ControllerBase
 
         // Create the claims-based identity that will be used by OpenIddict to generate tokens.
         var identity = new ClaimsIdentity(
-            authenticationType: TokenValidationParameters.DefaultAuthenticationType,
-            nameType: OpenIddictConstants.Claims.Name,
-            roleType: OpenIddictConstants.Claims.Role);
+            TokenValidationParameters.DefaultAuthenticationType,
+            OpenIddictConstants.Claims.Name,
+            OpenIddictConstants.Claims.Role);
 
         // Add the claims that will be persisted in the tokens.
         identity.AddClaim(OpenIddictConstants.Claims.Subject, user.Id)
             .AddClaim(OpenIddictConstants.Claims.Email, user.Email)
             .AddClaim(OpenIddictConstants.Claims.Name, user.UserName)
             .AddClaims(OpenIddictConstants.Claims.Role, (await _userManager.GetRolesAsync(user)).ToImmutableArray());
-        
-        // Set the list of scopes granted to the client application.
-        identity.SetScopes(new[]
-        { OpenIddictConstants.Scopes.OpenId,
-            OpenIddictConstants.Scopes.Email,
-            OpenIddictConstants.Scopes.Profile,
-            OpenIddictConstants.Scopes.Roles,
-            "microservice1.read",
-            "microservice1.write"
-        });
 
-        identity.SetResources(new[] { "resource-microservice1" });
+        // Set the list of scopes granted to the client application.
+        identity.SetScopes(OpenIddictConstants.Scopes.OpenId, OpenIddictConstants.Scopes.Email,
+            OpenIddictConstants.Scopes.Profile, OpenIddictConstants.Scopes.Roles, "microservice1.read",
+            "microservice1.write");
+
+        identity.SetResources("resource-microservice1");
 
         identity.SetDestinations(claim =>
         {
@@ -99,18 +94,14 @@ public class AuthController : ControllerBase
             //     return new[]
             //         { OpenIddictConstants.Destinations.AccessToken, OpenIddictConstants.Destinations.IdentityToken }; 
             // }
-            
-         
-             return new[] { OpenIddictConstants.Destinations.AccessToken,OpenIddictConstants.Destinations.IdentityToken };
+
+            return new[]
+                { OpenIddictConstants.Destinations.AccessToken, OpenIddictConstants.Destinations.IdentityToken };
         });
 
-      
         return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
-    
-    
-    
-    
+
     [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
     [HttpGet("~/connect/userinfo")]
     public async Task<IActionResult> Userinfo()
@@ -125,6 +116,4 @@ public class AuthController : ControllerBase
         //     Age = 43
         // });
     }
-    
-
 }
