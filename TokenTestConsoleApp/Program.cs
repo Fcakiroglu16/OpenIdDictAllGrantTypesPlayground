@@ -8,12 +8,11 @@ var configuration = await client.GetDiscoveryDocumentAsync("https://localhost:72
 if (configuration.IsError)
     throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");
 
-var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest()
 {
     Address = configuration.TokenEndpoint,
-    ClientId = "client1",
-    ClientSecret = "secret",
-    Scope = "microservice1.read microservice1.write"
+    UserName = "admin@outlook.com",
+    Password = "Password12*"
 });
 
 if (response.IsError) throw new Exception($"An error occurred while retrieving an access token: {response.Error}");
