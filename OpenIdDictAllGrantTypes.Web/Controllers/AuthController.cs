@@ -16,14 +16,13 @@ namespace OpenIdDictAllGrantTypes.Web.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly IOpenIddictScopeManager _scopeManager;
+   
     private readonly SignInManager<AppUser> _signInManager;
     private readonly UserManager<AppUser> _userManager;
-
-    public AuthController(IOpenIddictScopeManager scopeManager, UserManager<AppUser> userManager,
+    public AuthController( UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager)
     {
-        _scopeManager = scopeManager;
+    
         _userManager = userManager;
         _signInManager = signInManager;
     }
@@ -84,6 +83,7 @@ public class AuthController : ControllerBase
 
         identity.SetDestinations(claim =>
         {
+            //Examples
             // if (claim.Type == OpenIddictConstants.Claims.Subject  )
             // {
             //     return new[]
@@ -105,15 +105,7 @@ public class AuthController : ControllerBase
     [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
     [HttpGet("~/connect/userinfo")]
     public async Task<IActionResult> Userinfo()
-    {
-        return Ok();
-        // var claimsPrincipal = (await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)).Principal;
-        //
-        // return Ok(new
-        // {
-        //     Name = claimsPrincipal.GetClaim(OpenIddictConstants.Claims.Subject),
-        //     Occupation = "Developer",
-        //     Age = 43
-        // });
+    { 
+        return Ok( await  _userManager.FindByNameAsync(User.Identity.Name));
     }
 }

@@ -15,21 +15,27 @@ public static class IdentityExtension
             // Register the OpenIddict server components.
             .AddServer(options =>
             {
+             
                 options.AllowPasswordFlow();
                 options.AcceptAnonymousClients();
                 options.SetTokenEndpointUris("/connect/token");
                 options.SetUserinfoEndpointUris("/connect/userinfo");
-                options.AddDevelopmentEncryptionCertificate();
-                options.AddDevelopmentSigningCertificate();
+                options.AddEphemeralEncryptionKey();
+                options.AddEphemeralSigningKey();
                 options.DisableAccessTokenEncryption();
-
                 // options.RegisterScopes("microservice1.read",
                 //     "microservice1.write"); // Registers the specified scopes as supported scopes
-
                 options
                     .UseAspNetCore() //Registers the OpenIddict server services for ASP.NET Core in the DI container.
                     .EnableTokenEndpointPassthrough() // OpenID Connect requests are initially handled by OpenIddict.
                     .EnableUserinfoEndpointPassthrough();
+                
+                
+               
+            }).AddValidation(options =>
+            {
+                options.UseLocalServer();
+          
             });
     }
 
